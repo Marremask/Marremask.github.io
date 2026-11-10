@@ -73,7 +73,7 @@ h2 { margin: 0; font-weight: 400; line-height: 1.02; text-wrap: balance; } p { m
   if (!sek) return;
   var API = 'https://pakkfzpfwemldbzkigmr.supabase.co/rest/v1/poll_answers';
   var KEY = 'sb_publishable_NYZd7cIgVTLBxfzNZ_6yKQ_32tCDxpO';
-  var POLL = sek.getAttribute('data-poll') || 'berghs-agents';
+  var POLL = new URLSearchParams(location.search).get('p') || sek.getAttribute('data-poll') || 'berghs-agents';
   var vagg = sek.querySelector('.poll-vagg'), antalEl = sek.querySelector('.poll-antal'), status = sek.querySelector('.poll-status');
   var LS = 'poll-' + POLL;
   var minne = { dolda: [], fran: 0 };
