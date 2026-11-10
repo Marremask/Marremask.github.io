@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live answers</title><meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Newsreader:opsz,wght@6..72,400&display=swap">
+<style>
+:root { --svart:#000; --vit:#fff; --gra:#f5f5f5; --gra-3:#666; --text-2:#4a4a4a; --lila:#7300f0; --lila-2:#8d33ff; --gul:#ffd400;
+  --f-display:"Berghs Serif", Newsreader, "Times New Roman", serif; --f-body: Aeonik, Inter, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --u: min(1vw, 1.78vh); --kant: max(calc((100vw - 1600px) / 2), 7.5vw); }
+* { box-sizing: border-box; min-width: 0; }
+html, body { margin: 0; background: var(--gra); color: var(--svart); font: 400 calc(1.2 * var(--u))/1.45 var(--f-body); -webkit-font-smoothing: antialiased; overflow: hidden; }
+h2 { margin: 0; font-weight: 400; line-height: 1.02; text-wrap: balance; } p { margin: 0; }
+.vy { position: relative; height: 100svh; display: grid; align-content: center; overflow: hidden; padding-block: calc(5 * var(--u)); }
+.ram { width: min(1600px, calc(100% - 15vw)); margin-inline: auto; position: relative; }
+.rubrik { font-family: var(--f-display); font-size: calc(5 * var(--u)); text-transform: uppercase; letter-spacing: -.005em; line-height: 1; }
+/* ============================================================ LIVE-POLL (#poll) */
+#poll .ram { display: grid; grid-template-columns: minmax(0, 40fr) minmax(0, 60fr); gap: calc(4 * var(--u)); align-items: center; }
+#poll .rubrik { font-size: calc(4.2 * var(--u)); }
+#poll .poll-under { margin-top: calc(1.4 * var(--u)); font-size: calc(1.5 * var(--u)); line-height: 1.38; color: var(--text-2, #4a4a4a); max-width: 30ch; }
+#poll .poll-kod { margin-top: calc(2.6 * var(--u)); display: grid; grid-template-columns: auto 1fr; gap: calc(1.2 * var(--u)) calc(2 * var(--u)); align-items: end; }
+#poll .poll-qr { width: calc(18 * var(--u)); aspect-ratio: 1; background: var(--vit); padding: calc(1.3 * var(--u)); box-shadow: 0 calc(.5 * var(--u)) calc(1.4 * var(--u)) rgba(0,0,0,.06); }
+#poll .poll-qr svg { display: block; width: 100%; height: 100%; shape-rendering: crispEdges; }
+#poll .poll-info { display: grid; gap: calc(1 * var(--u)); justify-items: start; padding-bottom: calc(.4 * var(--u)); }
+#poll .poll-skanna { background: var(--gul); padding: calc(.7 * var(--u)) calc(1.1 * var(--u)); font: 700 calc(1.15 * var(--u))/1 var(--f-body); text-transform: uppercase; letter-spacing: .04em; }
+#poll .poll-url { grid-column: 1 / -1; font: 700 calc(1.5 * var(--u))/1.2 var(--f-body); white-space: nowrap; }
+#poll .poll-antal { font-size: calc(1.15 * var(--u)); color: var(--gra-3, #666); }
+#poll .poll-vagg { position: relative; height: calc(100svh - 12 * var(--u)); display: flex; flex-wrap: wrap; align-content: center; justify-content: center; gap: calc(1.3 * var(--u)) calc(1.4 * var(--u)); overflow: hidden; padding: calc(1.5 * var(--u)); --fs: 2; --mw: 34; }
+#poll .poll-vagg[data-tat="2"] { --fs: 1.6; --mw: 30; }
+#poll .poll-vagg[data-tat="3"] { --fs: 1.3; --mw: 26; }
+#poll .poll-vagg[data-tat="4"] { --fs: 1.1; --mw: 22; }
+#poll .poll-vagg[data-tat="5"] { --fs: .95; --mw: 19; }
+#poll .poll-svar { max-width: calc(var(--mw) * var(--u)); background: var(--vit); padding: calc(var(--fs) * .55 * var(--u)) calc(var(--fs) * .75 * var(--u)); font: 700 calc(var(--fs) * var(--u))/1.22 var(--f-body); color: var(--svart);
+  transform: rotate(var(--r, 0deg)); box-shadow: 0 calc(.5 * var(--u)) calc(1.4 * var(--u)) rgba(0,0,0,.07); cursor: pointer; overflow-wrap: anywhere;
+  transition: background-color 1.2s ease, font-size .4s ease; }
+#poll .poll-svar.ny { background: var(--gul); animation: pollPlopp .55s cubic-bezier(.34, 1.56, .64, 1) both; }
+#poll .poll-svar.lila { background: var(--lila); color: var(--vit); }
+#poll .poll-svar.borta { animation: pollBort .3s ease-in both; }
+@keyframes pollPlopp { from { opacity: 0; transform: translateY(calc(2 * var(--u))) scale(.55) rotate(var(--r, 0deg)); } to { opacity: 1; transform: rotate(var(--r, 0deg)); } }
+@keyframes pollBort { to { opacity: 0; transform: scale(.7) rotate(var(--r, 0deg)); } }
+#poll .poll-tom { position: absolute; inset: calc(1.5 * var(--u)); display: grid; place-content: center; justify-items: center; gap: calc(1.6 * var(--u)); border: 2px dashed rgba(0,0,0,.18); color: var(--gra-3, #666); font-size: calc(1.6 * var(--u)); text-align: center; }
+#poll .poll-vagg.har-svar .poll-tom { display: none; }
+#poll .poll-prickar { display: flex; gap: calc(.9 * var(--u)); }
+#poll .poll-prickar i { width: calc(1.3 * var(--u)); height: calc(1.3 * var(--u)); background: var(--lila); animation: pollPrick 1.2s ease-in-out infinite; }
+#poll .poll-prickar i:nth-child(2) { animation-delay: .15s; } #poll .poll-prickar i:nth-child(3) { animation-delay: .3s; }
+@keyframes pollPrick { 0%, 60%, 100% { transform: translateY(0); opacity: .35; } 30% { transform: translateY(calc(-1 * var(--u))); opacity: 1; } }
+#poll .poll-status { position: absolute; right: calc(1.5 * var(--u)); bottom: calc(.4 * var(--u)); font-size: calc(.95 * var(--u)); color: var(--gra-3, #666); opacity: 0; transition: opacity .3s; }
+#poll .poll-status.syns { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { #poll .poll-svar.ny, #poll .poll-svar.borta { animation: none; } }
+</style></head>
+<body>
+<section class="vy" id="poll" data-poll="berghs-agents"><div class="ram">
+  <div class="poll-text">
+    <h2 class="rubrik">What do you want to learn about agents?</h2>
+    <p class="poll-under">Scan the code and write a question or a topic. It pops up here, anonymously.</p>
+    <div class="poll-kod">
+      <div class="poll-qr"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" class="segno" role="img" aria-label="QR code to marremask.github.io/poll" xmlns:c2pa="http://c2pa.org/manifest"><path class="qrline" stroke="#000" d="M0 0.5h7m3 0h2m1 0h1m2 0h1m2 0h1m2 0h7m-29 1h1m5 0h1m1 0h4m2 0h6m2 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m2 0h6m1 0h1m3 0h1m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h1m2 0h4m2 0h1m3 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h1m5 0h1m3 0h2m2 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m2 0h5m5 0h1m2 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-20 1h1m1 0h4m1 0h2m1 0h2m-21 1h1m1 0h1m1 0h1m1 0h1m4 0h2m1 0h5m5 0h1m2 0h1m-28 1h1m2 0h1m1 0h1m2 0h1m1 0h1m1 0h1m1 0h2m4 0h3m2 0h1m2 0h1m-28 1h1m1 0h1m1 0h3m1 0h1m3 0h1m2 0h2m3 0h2m3 0h3m-29 1h1m1 0h1m1 0h1m4 0h1m2 0h1m2 0h1m1 0h1m1 0h1m3 0h1m3 0h1m-26 1h1m1 0h9m3 0h2m1 0h5m1 0h1m1 0h2m-29 1h1m1 0h2m1 0h1m1 0h1m5 0h1m1 0h1m4 0h3m2 0h1m2 0h1m-26 1h2m1 0h5m1 0h1m1 0h1m3 0h1m2 0h1m3 0h1m1 0h2m-29 1h1m1 0h1m1 0h2m3 0h2m1 0h3m1 0h3m1 0h1m2 0h1m1 0h1m1 0h1m-28 1h2m4 0h1m1 0h2m2 0h1m1 0h4m2 0h4m1 0h1m1 0h2m-27 1h1m1 0h2m8 0h1m5 0h3m2 0h2m1 0h1m-29 1h1m1 0h1m3 0h3m1 0h1m2 0h1m2 0h2m2 0h1m1 0h3m2 0h2m-28 1h4m2 0h1m1 0h4m2 0h4m1 0h1m2 0h1m1 0h1m1 0h1m-28 1h1m1 0h1m1 0h4m1 0h2m1 0h1m2 0h10m-17 1h3m2 0h1m2 0h1m2 0h2m3 0h1m1 0h3m-29 1h7m5 0h1m1 0h1m1 0h2m1 0h2m1 0h1m1 0h2m1 0h2m-29 1h1m5 0h1m3 0h2m1 0h8m3 0h2m-26 1h1m1 0h3m1 0h1m1 0h5m1 0h4m2 0h5m3 0h1m-29 1h1m1 0h3m1 0h1m2 0h1m3 0h2m1 0h3m1 0h1m2 0h2m1 0h3m-29 1h1m1 0h3m1 0h1m1 0h1m1 0h3m5 0h1m2 0h1m1 0h3m2 0h1m-29 1h1m5 0h1m3 0h2m1 0h2m1 0h2m1 0h3m5 0h1m-28 1h7m1 0h1m1 0h2m2 0h4m1 0h3m1 0h1m3 0h2"/><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTpjM2Y4NTliMi00ZmUwLTQwMTktYjk0My1kMzRkODc5MTQ3NDYAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaAcFp3jVM9zIoGgBeo1X16IAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDo5Y2I4ODg2ZC1lYzg4LTRlMjItOGEzZS01NGE3ZWQ5NzA3MDVscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNoBNuTJU2ag4zXfdpAfw752gAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggkzz9pQa41UYPTFqPV4E0tzcZ1hnYXMnB1WRv/5v0YS2kZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaKLkNCzh5nTWEQSl5dnyQQcAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRMAAAAAAAAAAAAAAAAZGhhc2hYIC+jVYirdsq6hG2x/aDv3nvMKZ9UdxNc/db+iqL8j5c/ZG5hbWVuanVtYmYgbWFuaWZlc3RqZXhjbHVzaW9uc4GiZXN0YXJ0GQYhZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOmMzZjg1OWIyLTRmZTAtNDAxOS1iOTQzLWQzNGQ4NzkxNDc0Ni9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjM0ZGIwMTg0LWUwNWMtNDYzNS1hZTM2LTkwMjk2NzVmZDJmNHJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCCTPP2lBrjVRg9MWo9XgTS3NxnWGdhcycHVZG//m/RhLaJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggSamKpAupFm1cixOfNdLD/7x3VvgAuwoyXE6RveqmSYCiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFgg5a0cdzA03Amnmt2U/q9Vw6yjNgoUZusIEohCiTsDhcd0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQBUy52fvw365hSrLM1Ej4SA5sOpIBTdQsJqZY/jzXK+Xb9wl8dmevuNaTmHQyj+XPF9mxDkpSE0F8EG4unzU2as=</c2pa:manifest></metadata></svg></div>
+      <div class="poll-info">
+        <span class="poll-skanna">Scan me</span>
+        <span class="poll-antal" aria-live="polite"></span>
+      </div>
+      <span class="poll-url">marremask.github.io/poll</span>
+    </div>
+  </div>
+  <div class="poll-vagg" aria-live="polite">
+    <div class="poll-tom"><div class="poll-prickar" aria-hidden="true"><i></i><i></i><i></i></div><span>Your answers will pop up here</span></div>
+    <span class="poll-status"></span>
+  </div>
+</div></section>
+<script>
+/* LIVE-POLL (#poll): hämtar svar från Supabase var 2,5 s medan sliden syns.
+   Klick på ett svar döljer det (sparas lokalt). Tangent X på sliden tömmer väggen (döljer allt som finns nu). */
+(function () {
+  var sek = document.getElementById('poll');
+  if (!sek) return;
+  var API = 'https://pakkfzpfwemldbzkigmr.supabase.co/rest/v1/poll_answers';
+  var KEY = 'sb_publishable_NYZd7cIgVTLBxfzNZ_6yKQ_32tCDxpO';
+  var POLL = sek.getAttribute('data-poll') || 'berghs-agents';
+  var vagg = sek.querySelector('.poll-vagg'), antalEl = sek.querySelector('.poll-antal'), status = sek.querySelector('.poll-status');
+  var LS = 'poll-' + POLL;
+  var minne = { dolda: [], fran: 0 };
+  try { minne = Object.assign(minne, JSON.parse(localStorage.getItem(LS) || '{}')); } catch (e) {}
+  function spara() { try { localStorage.setItem(LS, JSON.stringify(minne)); } catch (e) {} }
+  var sista = 0, timer = null, synlig = false, forsta = true, visade = 0;
+
+  function satt(niva) { vagg.setAttribute('data-tat', String(niva)); }
+  function rymsInte() { return vagg.scrollHeight > vagg.clientHeight + 2; }
+  function trimma() {
+    var kort = vagg.querySelectorAll('.poll-svar:not(.borta)'), n = kort.length;
+    vagg.classList.toggle('har-svar', n > 0);
+    var niva = n <= 5 ? 1 : n <= 10 ? 2 : n <= 18 ? 3 : n <= 28 ? 4 : 5;
+    satt(niva);
+    while (rymsInte() && niva < 5) { niva++; satt(niva); }
+    var i = 0;
+    while (rymsInte() && i < n - 1) { kort[i].remove(); i++; }
+  }
+  function rakna() {
+    antalEl.textContent = visade === 0 ? '' : visade === 1 ? '1 answer' : visade + ' answers';
+  }
+  function lagg(rad, animera) {
+    if (rad.id <= minne.fran || minne.dolda.indexOf(rad.id) >= 0) return;
+    var el = document.createElement('div');
+    el.className = 'poll-svar' + (animera ? ' ny' : '') + (rad.id % 7 === 3 ? ' lila' : '');
+    el.style.setProperty('--r', ((rad.id * 37 % 50) / 10 - 2.5).toFixed(1) + 'deg');
+    el.textContent = rad.answer;
+    el.title = 'Click to hide';
+    el.addEventListener('click', function (e) {
+      e.stopPropagation(); e.preventDefault();
+      minne.dolda.push(rad.id); spara();
+      el.classList.add('borta');
+      setTimeout(function () { el.remove(); visade = Math.max(0, visade - 1); rakna(); trimma(); }, 300);
+    });
+    vagg.insertBefore(el, vagg.querySelector('.poll-tom'));
+    visade++;
+    if (animera) setTimeout(function () { el.classList.remove('ny'); }, 4000);
+  }
+  var pagar = null;
+  function hamta() {
+    if (pagar) return pagar;
+    var url = API + '?poll=eq.' + encodeURIComponent(POLL) + '&id=gt.' + Math.max(sista, minne.fran) + '&select=id,answer&order=id.asc&limit=200';
+    pagar = fetch(url, { headers: { apikey: KEY }, cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (rader) {
+        status.classList.remove('syns');
+        rader.forEach(function (rad, i) {
+          sista = Math.max(sista, rad.id);
+          if (forsta) lagg(rad, false);
+          else setTimeout(function () { lagg(rad, true); rakna(); trimma(); }, i * 350);
+        });
+        forsta = false; rakna(); trimma();
+      })
+      .catch(function () { status.textContent = 'Reconnecting…'; status.classList.add('syns'); })
+      .then(function () { pagar = null; });
+    return pagar;
+  }
+  function slinga() { clearTimeout(timer); if (!synlig) return; hamta().then(function () { timer = setTimeout(slinga, 2500); }); }
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (poster) {
+      var nu = poster[0].isIntersecting;
+      if (nu && !synlig) { synlig = true; slinga(); } else if (!nu) { synlig = false; clearTimeout(timer); }
+    }, { threshold: 0.4 }).observe(sek);
+  } else { synlig = true; slinga(); }
+  hamta();
+  document.addEventListener('keydown', function (e) {
+    if (!synlig || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key === 'x' || e.key === 'X') {
+      minne.fran = sista; minne.dolda = []; spara();
+      vagg.querySelectorAll('.poll-svar').forEach(function (el) { el.remove(); });
+      visade = 0; rakna(); trimma();
+    }
+  });
+})();
+</script>
+</body></html>
